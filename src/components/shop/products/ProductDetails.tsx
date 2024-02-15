@@ -18,8 +18,8 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           <div>
             {/* Category */}
             <p className="text-muted-foreground pb-4 text-xs">Sneakers</p>
-            {/* Title */}
-            <h1 className="text-2xl font-bold uppercase">{product.title}</h1>
+            {/* Name */}
+            <h1 className="text-2xl font-bold uppercase">{product.name}</h1>
             {/* Price */}
             <p className="py-4 text-sm">
               <span>{product.price}</span>
@@ -32,7 +32,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           </div>
           {/* Add to cart */}
           <AddToCartButton
-            title={product?.title}
+            name={product?.name}
             image={product?.images?.[0] || ""}
             price={product.price}
             description={product.description || ""}

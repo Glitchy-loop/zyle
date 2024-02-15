@@ -3,8 +3,8 @@ import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper"
 import AllProducts from "@/components/shop/products/AllProducts"
 import AllProductsSkeleton from "@/components/skeletons/AllProductsSkeleton"
 import axios from "axios"
+import { revalidatePath } from "next/cache"
 import { Suspense } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
 
 interface ShopPageProps {
   limit: number
@@ -29,7 +29,9 @@ const getProducts = async ({ limit, page, offset }: ShopPageProps) => {
       },
     }
   )
+
   const { products, count } = data
+
   return { products, count }
 }
 

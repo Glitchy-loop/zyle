@@ -5,7 +5,7 @@ import { ProductCartProps } from "@/types"
 import { useShoppingCart } from "use-shopping-cart"
 
 export default function AddToCartButton({
-  title,
+  name,
   description,
   price,
   currency,
@@ -14,7 +14,7 @@ export default function AddToCartButton({
 }: ProductCartProps) {
   const { addItem, handleCartClick } = useShoppingCart()
   const product = {
-    name: title,
+    name: name,
     description: description,
     price: price,
     currency: currency,

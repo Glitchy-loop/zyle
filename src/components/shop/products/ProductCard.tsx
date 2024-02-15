@@ -17,15 +17,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.images && product.images[0] && (
             <Image
               src={product.images[0]}
-              alt={product.title}
-              width={350}
-              height={350}
-              className="objcet-cover object-center w-full h-96 object-cover"
+              alt={product.name}
+              width={600}
+              height={600}
+              className="object-cover object-center w-full h-96"
             />
           )}
         </CardHeader>
         <CardContent className="font-bold text-sm mt-10">
-          {product.title}
+          {product.name}
         </CardContent>
         <CardFooter className="flex text-sm">
           <span>{product.price}</span> <span>{currency.symbol}</span>

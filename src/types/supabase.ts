@@ -34,33 +34,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
       products: {
         Row: {
+          category: string | null
           created_at: string
           description: string | null
           id: string
           images: string[]
+          name: string
           price: number
           price_id: string | null
-          title: string
         }
         Insert: {
+          category?: string | null
           created_at?: string
           description?: string | null
           id?: string
           images: string[]
+          name: string
           price: number
           price_id?: string | null
-          title: string
         }
         Update: {
+          category?: string | null
           created_at?: string
           description?: string | null
           id?: string
           images?: string[]
+          name?: string
           price?: number
           price_id?: string | null
-          title?: string
         }
         Relationships: []
       }
@@ -69,19 +90,22 @@ export type Database = {
           created_at: string
           email: string
           id: string
-          role: string | null
+          role: string
+          stripe_customer: string | null
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
-          role?: string | null
+          role?: string
+          stripe_customer?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
-          role?: string | null
+          role?: string
+          stripe_customer?: string | null
         }
         Relationships: [
           {

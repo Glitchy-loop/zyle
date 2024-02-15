@@ -41,35 +41,37 @@ const ProductPageImageSlider = ({ images }: ProductPageImageSliderProps) => {
               <Image
                 src={image}
                 alt="Product Image"
-                width={400}
-                height={400}
+                width={500}
+                height={500}
                 className="h-full w-full object-cover object-center"
               />
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
-      <Swiper
-        onSwiper={setThumbsSwiper as any}
-        spaceBetween={4}
-        slidesPerView={4}
-        freeMode={true}
-        watchSlidesProgress={true}
-        modules={[FreeMode, Navigation, Thumbs]}
-        className="absolute bottom-0 left-0 transform -translate-y-1/2 w-full md:unset md:transform-none"
-      >
-        {images.map((image: any, index) => (
-          <SwiperSlide key={index}>
-            <Image
-              src={image}
-              alt="Product Image"
-              width={100}
-              height={100}
-              className="h-full w-full md:mt-[4px] object-cover object-center border-2 border-white"
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {images.length > 1 && (
+        <Swiper
+          onSwiper={setThumbsSwiper as any}
+          spaceBetween={4}
+          slidesPerView={4}
+          freeMode={true}
+          watchSlidesProgress={true}
+          modules={[FreeMode, Navigation, Thumbs]}
+          className="absolute bottom-0 left-0 transform -translate-y-1/2 w-full md:unset md:transform-none"
+        >
+          {images.map((image: any, index) => (
+            <SwiperSlide key={index}>
+              <Image
+                src={image}
+                alt="Product Image"
+                width={100}
+                height={100}
+                className="h-full w-full md:mt-[4px] object-cover object-center border-2 border-white"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </div>
   )
 }

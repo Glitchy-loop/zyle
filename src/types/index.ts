@@ -9,7 +9,7 @@ export type LoginRegisterNav = {
 }
 
 export type ProductCartProps = {
-  title: string
+  name: string
   description: string
   price: number
   currency: string

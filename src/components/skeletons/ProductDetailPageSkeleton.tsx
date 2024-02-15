@@ -12,7 +12,7 @@ const ProductDetailPageSkeleton = () => {
             <div className="text-muted-foreground pb-4 text-xs">
               <Skeleton className="h-4 w-[50px]" />
             </div>
-            {/* Title */}
+            {/* Name */}
             <h1 className="text-2xl font-bold uppercase">
               <Skeleton className="h-10 w-[250px] my-4" />
             </h1>

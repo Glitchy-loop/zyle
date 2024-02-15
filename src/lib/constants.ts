@@ -7,6 +7,10 @@ export const navItems = [
     name: "Shop",
     href: "/shop",
   },
+  {
+    name: "Studio",
+    href: "/studio",
+  },
 ]
 
 export const loginRegisterNavItems = [
