@@ -20,6 +20,7 @@ import { useState } from "react"
 import { ArrowRight, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import useAuth from "../../../hooks/useAuth"
+import axios from "axios"
 
 const formSchema = z
   .object({
@@ -37,7 +38,7 @@ const formSchema = z
 const RegistrationForm = () => {
   const [loading, setLoading] = useState<Boolean>(false)
   const router = useRouter()
-  const { register, handleLoginWithGoogle } = useAuth()
+  const { handleLoginWithGoogle } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,21 +52,30 @@ const RegistrationForm = () => {
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true)
+
       // Check if passwords match
       if (values.password !== values.passwordConfirm) {
         toast.error("Passwords do not match")
         setLoading(false)
         return
       }
-      const result = await register(values) // Update this line
+
       const registrationPromise = new Promise((resolve, reject) => {
-        // Check for success status in result
-        if (result.success) {
-          resolve(result.data) // Resolve with the response data
-        } else {
-          reject(result.error) // Reject with the error message
-        }
+        axios
+          .post("/api/auth/sign-up", values)
+          .then((response) => {
+            // Check for success status
+            if (response.status === 200) {
+              resolve(response.data) // Resolve with the response data
+            } else {
+              reject(response.data.message || "Registration failed") // Reject with the error message
+            }
+          })
+          .catch((error) => {
+            reject(error.response.data.message || "Registration failed") // Reject with the error message from the response
+          })
       })
+
       toast.promise(registrationPromise, {
         loading: "Registering in...",
         success: () => {

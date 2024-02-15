@@ -11,7 +11,7 @@ import LoginRegisterNav from "./LoginRegisterNav"
 
 const Header = ({ session }: { session: Session | null }) => {
   return (
-    <header className="border-b sticky top-0 left-0 w-full bg-background">
+    <header className="border-b sticky top-0 left-0 w-full border-border/90 bg-background/75 backdrop-blur supports-[backdrop-filter]:bg-background/6 z-40">
       <MaxWidthWrapper className="flex h-24 justify-between items-center">
         {/* Left side */}
 

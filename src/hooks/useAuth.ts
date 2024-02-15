@@ -17,66 +17,66 @@ const useAuth = () => {
   const supabase = createClientComponentClient()
 
   // Register user
-  const register = async (values: AuthValues) => {
-    try {
-      setLoading(true)
+  // const register = async (values: AuthValues) => {
+  //   try {
+  //     setLoading(true)
 
-      const response = await axios.post("/api/auth/sign-up", values)
+  //     const response = await axios.post("/api/auth/sign-up", values)
 
-      // Check for success status
-      if (response.status === 200) {
-        return {
-          success: true,
-          data: response.data,
-        }
-      } else {
-        return {
-          success: false,
-          error: response.data.message || "Registration failed",
-        }
-      }
-    } catch (error: any) {
-      console.error(error)
-      return {
-        success: false,
-        error: error.message || `Something went wrong... Please try again`,
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
+  //     // Check for success status
+  //     if (response.status === 200) {
+  //       return {
+  //         success: true,
+  //         data: response.data,
+  //       }
+  //     } else {
+  //       return {
+  //         success: false,
+  //         error: response.data.message || "Registration failed",
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     console.error(error)
+  //     return {
+  //       success: false,
+  //       error: error.message || `Something went wrong... Please try again`,
+  //     }
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   // login user
-  const login = async (values: AuthValues) => {
-    try {
-      setLoading(true)
+  // const login = async (values: AuthValues) => {
+  //   try {
+  //     setLoading(true)
 
-      const response = await axios.post("/api/auth/sign-in", values)
+  //     const response = await axios.post("/api/auth/sign-in", values)
 
-      // Check for success status
-      if (response.status === 200) {
-        return {
-          success: true,
-          data: response.data,
-        }
-      } else {
-        return {
-          success: false,
-          error: response.data.message || "Login failed",
-        }
-      }
-    } catch (error: any) {
-      console.error(error)
-      return {
-        success: false,
-        error:
-          error.response?.data.message ||
-          `Something went wrong... Please try again`,
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
+  //     // Check for success status
+  //     if (response.status === 200) {
+  //       return {
+  //         success: true,
+  //         data: response.data,
+  //       }
+  //     } else {
+  //       return {
+  //         success: false,
+  //         error: response.data.message || "Login failed",
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     console.error(error)
+  //     return {
+  //       success: false,
+  //       error:
+  //         error.response?.data.message ||
+  //         `Something went wrong... Please try again`,
+  //     }
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
   // Sign out user
   const signOut = () => {
@@ -139,7 +139,13 @@ const useAuth = () => {
     }
   }
 
-  return { register, login, signOut, loading, handleLoginWithGoogle }
+  return {
+    // register,
+    // login,
+    signOut,
+    loading,
+    handleLoginWithGoogle,
+  }
 }
 
 export default useAuth

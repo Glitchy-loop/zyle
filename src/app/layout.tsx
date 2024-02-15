@@ -8,6 +8,9 @@ import { Toaster } from "sonner"
 import { ReactQueryClientProvider } from "@/providers/QueryClientProvider"
 import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import SmoothScrollProvider from "@/providers/SmoothScrollProvider"
+import CartProvider from "@/providers/CartProvider"
+import ShoppingCartSidebar from "@/components/layout/ShoppingCartSidebar"
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -47,17 +50,22 @@ export default async function RootLayout({
       <body
         className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
       >
-        <ReactQueryClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
+        {/* <ReactQueryClientProvider> */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <CartProvider>
             <Header session={mergedSession} />
-            <main>{children}</main>
-          </ThemeProvider>
-        </ReactQueryClientProvider>
+            <ShoppingCartSidebar />
+            <SmoothScrollProvider>
+              <main>{children}</main>
+            </SmoothScrollProvider>
+          </CartProvider>
+        </ThemeProvider>
+        {/* </ReactQueryClientProvider> */}
         <Toaster position="top-center" richColors />
       </body>
     </html>

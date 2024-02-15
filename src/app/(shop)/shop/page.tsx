@@ -1,26 +1,53 @@
-"use client"
-
+import Paginator from "@/components/Paginator"
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper"
 import AllProducts from "@/components/shop/products/AllProducts"
-import { useQuery } from "@tanstack/react-query"
+import AllProductsSkeleton from "@/components/skeletons/AllProductsSkeleton"
 import axios from "axios"
+import { Suspense } from "react"
+import { usePathname, useSearchParams } from "next/navigation"
 
-const getProducts = async () => {
-  const { data } = await axios.get("/api/shop/products/get-all-products")
-  return data
+interface ShopPageProps {
+  limit: number
+  page: number
+  offset: number
 }
 
-export default function ShopPage() {
-  const { isLoading, isPending, error, data } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => getProducts(),
-  })
+type paramsProps = {
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
 
-  if (isLoading) return <p>Loading...</p>
+const getProducts = async ({ limit, page, offset }: ShopPageProps) => {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_WEB_URL}/api/shop/products/get-all-products`,
+    {
+      params: {
+        limit,
+        page,
+        offset,
+      },
+    }
+  )
+  const { products, count } = data
+  return { products, count }
+}
+
+export default async function ShopPage({ searchParams }: paramsProps) {
+  const page: number = parseInt(searchParams.page as string) || 1
+  const limit: number = parseInt(searchParams.limit as string) || 6
+  const offset: number = (page - 1) * limit
+  // const search: string | null = searchParams.search?.toString() || null
+
+  const { products, count } = await getProducts({ limit, page, offset })
+  const totalPages = Math.ceil(count / limit)
 
   return (
     <MaxWidthWrapper>
-      <AllProducts products={data} />
+      <Suspense fallback={<AllProductsSkeleton repeatCount={6} />}>
+        <AllProducts products={products} />
+      </Suspense>
+      <Paginator totalPages={totalPages} />
     </MaxWidthWrapper>
   )
 }

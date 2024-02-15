@@ -47,7 +47,7 @@ const UserNav = ({ session }: { session: Session | null }) => {
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onClick={() => signOut()}>
+        <DropdownMenuItem className="cursor-pointer" onClick={signOut}>
           Log out
           <DropdownMenuShortcut>
             <LogOut className="w-4 h-4" />

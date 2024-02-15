@@ -7,12 +7,26 @@ export async function GET(request: NextRequest) {
   const supabase = createRouteHandlerClient({
     cookies: () => cookieStore,
   })
+
+  const limit = Number(request.nextUrl.searchParams.get("limit"))
+  const page = Number(request.nextUrl.searchParams.get("page"))
+  const offset = parseInt(request.nextUrl.searchParams.get("offset") || "0")
+
   //   Get products from the database
-  const { data: products, error } = await supabase.from("products").select("*")
+  const {
+    data: products,
+    count,
+    error,
+  } = await supabase
+    .from("products")
+    .select("*", { count: "exact" })
+    .limit(limit)
+    .range(offset, offset + limit - 1)
+    .order("created_at", { ascending: false })
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json(products, { status: 200 })
+  return NextResponse.json({ products, count }, { status: 200 })
 }

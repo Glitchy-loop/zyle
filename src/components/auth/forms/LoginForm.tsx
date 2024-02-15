@@ -20,6 +20,7 @@ import { ArrowRightIcon, Loader2 } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import useAuth from "../../../hooks/useAuth"
+import axios from "axios"
 
 const formSchema = z.object({
   email: z.string().email().min(4),
@@ -31,7 +32,7 @@ const formSchema = z.object({
 const LoginForm = () => {
   const [loading, setLoading] = useState<Boolean>(false)
   const router = useRouter()
-  const { login, handleLoginWithGoogle } = useAuth()
+  const { handleLoginWithGoogle } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,18 +43,25 @@ const LoginForm = () => {
   })
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    toast.success("Login successful")
     try {
+      // Axios request to register user
       setLoading(true)
-      const result = await login(values)
       const loginPromise = new Promise((resolve, reject) => {
-        // Check for success status in result
-        if (result.success) {
-          resolve(result.data) // Resolve with the response data
-        } else {
-          reject(result.error) // Reject with the error message
-        }
+        axios
+          .post("/api/auth/sign-in", values)
+          .then((response) => {
+            // Check for success status
+            if (response.status === 200) {
+              resolve(response.data) // Resolve with the response data
+            } else {
+              reject(response.data.message || "Login failed") // Reject with the error message
+            }
+          })
+          .catch((error) => {
+            reject(error.response.data.message || "Login failed") // Reject with the error message from the response
+          })
       })
+
       toast.promise(loginPromise, {
         loading: "Logging in...",
         success: () => {
@@ -68,7 +76,11 @@ const LoginForm = () => {
           return `${error}`
         },
       })
-    } finally {
+      setLoading(false)
+    } catch (error) {
+      // Handle errors
+      console.error(error)
+      toast.error("Something went wrong... Please try again")
       setLoading(false)
     }
   }
