@@ -14,9 +14,5 @@ export default function SmoothScrollProvider({
     })()
   }, [])
 
-  return (
-    <div data-scroll-container data-scroll data-scroll-speed="0.5">
-      {children}
-    </div>
-  )
+  return <div>{children}</div>
 }

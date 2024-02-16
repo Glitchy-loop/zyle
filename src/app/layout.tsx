@@ -48,22 +48,22 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
-      >
+      <body className={cn("font-sans antialiased", fontSans.variable)}>
         {/* <ReactQueryClientProvider> */}
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
           <CartProvider>
-            <Header session={mergedSession} />
-
-            <ShoppingCartSidebar />
             <SmoothScrollProvider>
-              <main>{children}</main>
+              <main className="min-h-screen ">
+                <Header session={mergedSession} />
+                <ShoppingCartSidebar />
+
+                {children}
+              </main>
               <Footer />
             </SmoothScrollProvider>
           </CartProvider>

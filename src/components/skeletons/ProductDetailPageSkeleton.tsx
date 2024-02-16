@@ -6,7 +6,7 @@ const ProductDetailPageSkeleton = () => {
     <MaxWidthWrapper className="px-0, md:px-0">
       <div className="flex flex-col md:flex-row h-full">
         {/* Product details */}
-        <div className="w-full md:w-[50%] bg-foreground text-secondary p-6 md:p-16 flex flex-col justify-between order-2">
+        <div className="w-full md:w-[50%] p-6 md:p-16 flex flex-col justify-between order-2">
           <div>
             {/* Category */}
             <div className="text-muted-foreground pb-4 text-xs">

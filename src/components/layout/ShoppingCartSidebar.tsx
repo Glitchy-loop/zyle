@@ -61,7 +61,7 @@ export default function ShoppingCartSidebar() {
                     {Object.values(cartDetails ?? {}).map((product) => (
                       <li
                         key={product.id}
-                        className="py-6 flex items-center hover:bg-primary-foreground transition-colors duration-200 ease-in-out"
+                        className="py-6 flex items-center hover:bg-secondary transition-colors duration-200 ease-in-out"
                       >
                         <Image
                           src={product.image as string}

@@ -4,6 +4,7 @@ import { currency } from "@/lib/constants"
 import ProductPageImageSlider from "./ProductPageImageSlider"
 import { Product } from "@/types/collection"
 import AddToCartButton from "../cart/AddToCartButton"
+import BreadCrumb from "@/components/BreadCrumbs"
 
 interface ProductDetailsProps {
   product: Product
@@ -12,9 +13,16 @@ interface ProductDetailsProps {
 const ProductDetails = ({ product }: ProductDetailsProps) => {
   return (
     <MaxWidthWrapper className="px-0, md:px-0">
+      {/* Breadcrumbs */}
+      <BreadCrumb
+        items={[
+          { title: "Shop", link: "/shop" },
+          { title: product.name, link: `/product/${product.id}` },
+        ]}
+      />
       <div className="flex flex-col md:flex-row h-full">
         {/* Product details */}
-        <div className="w-full md:w-[50%] bg-foreground text-secondary p-6 md:p-16 flex flex-col justify-between order-2">
+        <div className="w-full md:w-[50%] py-10 md:py-0 px-6 md:px-8 lg:px-10  flex flex-col justify-between order-2">
           <div>
             {/* Category */}
             <p className="text-muted-foreground pb-4 text-xs">Sneakers</p>
@@ -26,7 +34,7 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
               <span>{currency.symbol}</span>
             </p>
             {/* Description */}
-            <p className="text-muted-foreground text-xs">
+            <p className="text-muted-foreground text-xs mb-10 md:mb-0">
               {product.description}
             </p>
           </div>

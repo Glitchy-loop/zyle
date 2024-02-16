@@ -11,7 +11,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <Link href={`product/product?id=${product.id}`}>
+    <Link href={`shop/product/product?id=${product.id}`}>
       <Card className="cursor-pointer flex flex-col group hover:border-primary transition-all duration-150 ease-in">
         <CardHeader className="p-0">
           {product.images && product.images[0] && (
@@ -24,7 +24,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             />
           )}
         </CardHeader>
-        <CardContent className="font-bold text-sm mt-10">
+        <CardContent className="font-bold text-sm mt-10 truncate">
           {product.name}
         </CardContent>
         <CardFooter className="flex text-sm">

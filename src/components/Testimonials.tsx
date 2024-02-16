@@ -15,7 +15,7 @@ import { Quote, Star } from "lucide-react"
 
 const Testimonials = () => {
   return (
-    <div className="flex flex-col justify-center mt-10 pt-20">
+    <div className="flex flex-col justify-center pt-20">
       <h2 className="text-2xl text-center">What our client say</h2>
       <Swiper
         //   slidesPerView={3}
@@ -43,7 +43,7 @@ const Testimonials = () => {
           },
         }}
         modules={[Autoplay]}
-        className="h-80 py-4 w-full mt-10 md:mt-20"
+        className="py-4 w-full mt-10 md:mt-20"
       >
         {testimonials.map((testimonial, index) => (
           <SwiperSlide
@@ -57,7 +57,7 @@ const Testimonials = () => {
               </div>
 
               <div>
-                <p className="text-center font-semibold mt-2">
+                <p className="text-center font-semibold mt-6">
                   {testimonial.name}
                 </p>
                 <div className="flex justify-center mt-2">
