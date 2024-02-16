@@ -11,7 +11,7 @@ export default function CartButton() {
       <div className="flex divide-x">
         <Button
           variant="ghost"
-          className="gap-y-1.5 h-16 w-20 flex flex-col hover:bg-transparent"
+          className="gap-y-1.5 flex flex-col hover:bg-transparent p-0 m-0"
         >
           <ShoppingBag size={20} />
           {/* <span className="hidden text-xs font-semibold sm:block">Cart</span> */}
