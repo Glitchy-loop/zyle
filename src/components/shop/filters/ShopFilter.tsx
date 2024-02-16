@@ -1,4 +1,4 @@
-"use client"
+"use client" // TODO convert this to server side
 
 import { Button } from "@/components/ui/button"
 import {
@@ -32,8 +32,7 @@ const ShopFilter = () => {
 
     // Remove duplicates
     const uniqueColors = Array.from(new Set(flattenedColors))
-
-    setColors(uniqueColors)
+    return setColors(uniqueColors)
   }
 
   const getGenders = async () => {
@@ -44,7 +43,6 @@ const ShopFilter = () => {
         console.error("Error fetching genders:", error.message)
         return
       }
-
       // Extract the "gender" property from each object
       //   @ts-ignore
       const genders = data.map((item) => item.gender)
@@ -52,7 +50,7 @@ const ShopFilter = () => {
       // Remove duplicates
       const uniqueGenders = Array.from(new Set(genders))
 
-      setGenders(uniqueGenders)
+      setGenders(uniqueGenders as string[])
     } catch (error) {
       console.error("Error in getGenders:", error)
     }
@@ -73,6 +71,7 @@ const ShopFilter = () => {
     const params = new URLSearchParams(searchParams)
     params.delete("color")
     params.delete("gender")
+    params.set("page", "1")
     return (window.location.href = `${pathname}?${params.toString()}`)
   }
 
@@ -103,13 +102,10 @@ const ShopFilter = () => {
                   <Button
                     key={color}
                     className={cn(
-                      color &&
-                        `p-0 m-0 bg-${color}-500 border-${color}-200 border-2 hover:bg-${color}-600 hover:border-${color}-400 transition-colors duration-300`,
-                      color === "white"
-                        ? "bg-white"
-                        : color === "black"
-                        ? "bg-black"
-                        : null,
+                      "p-0 m-0 border-2 hover:border-400 transition-colors duration-300",
+                      `bg-${color}-500 border-${color}-200`,
+                      color === "white" && "bg-white",
+                      color === "black" && "bg-black",
                       "me-2",
                       "w-6",
                       "h-6",

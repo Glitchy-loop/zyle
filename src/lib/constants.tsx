@@ -87,3 +87,18 @@ export const testimonials = [
     stars: 5,
   },
 ]
+
+export const studioNavItems = [
+  {
+    name: "Products",
+    href: "/studio/products",
+  },
+  {
+    name: "Orders",
+    href: "/studio/orders",
+  },
+  {
+    name: "Settings",
+    href: "/studio/settings",
+  },
+]

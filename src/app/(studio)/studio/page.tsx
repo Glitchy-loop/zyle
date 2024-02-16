@@ -7,7 +7,6 @@ const Studio = () => {
   return (
     <MaxWidthWrapper>
       <h1>Studio</h1>
-      <CreateProductForm />
     </MaxWidthWrapper>
   )
 }

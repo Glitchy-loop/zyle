@@ -4,8 +4,7 @@ import "../styles/globals.css"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/providers/ThemeProvider"
 import Header from "@/components/layout/Header"
-import { Toaster } from "sonner"
-import { ReactQueryClientProvider } from "@/providers/QueryClientProvider"
+import { Toaster } from "@/components/ui/sonner"
 import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import SmoothScrollProvider from "@/providers/SmoothScrollProvider"
@@ -49,7 +48,6 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("font-sans antialiased", fontSans.variable)}>
-        {/* <ReactQueryClientProvider> */}
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -67,9 +65,8 @@ export default async function RootLayout({
               <Footer />
             </SmoothScrollProvider>
           </CartProvider>
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
-        {/* </ReactQueryClientProvider> */}
-        <Toaster position="top-center" richColors />
       </body>
     </html>
   )
