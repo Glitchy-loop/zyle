@@ -11,6 +11,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import SmoothScrollProvider from "@/providers/SmoothScrollProvider"
 import CartProvider from "@/providers/CartProvider"
 import ShoppingCartSidebar from "@/components/layout/ShoppingCartSidebar"
+import Footer from "@/components/layout/Footer"
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -59,9 +60,11 @@ export default async function RootLayout({
         >
           <CartProvider>
             <Header session={mergedSession} />
+
             <ShoppingCartSidebar />
             <SmoothScrollProvider>
               <main>{children}</main>
+              <Footer />
             </SmoothScrollProvider>
           </CartProvider>
         </ThemeProvider>

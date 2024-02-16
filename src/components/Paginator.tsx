@@ -18,7 +18,7 @@ const Paginator = ({ totalPages }: { totalPages: number }) => {
   }
 
   return (
-    <Pagination className="mt-4">
+    <Pagination className="mt-4 mb-16">
       <PaginationContent>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <Link key={page} href={createPageURL(page)}>
