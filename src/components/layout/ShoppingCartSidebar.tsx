@@ -37,7 +37,7 @@ export default function ShoppingCartSidebar() {
 
   return (
     <Sheet open={shouldDisplayCart} onOpenChange={handleCartClick}>
-      <SheetContent className="sm:max-w-lg w-[90vw]">
+      <SheetContent className="sm:max-w-lg w-[80vw]">
         <SheetHeader>
           <SheetTitle>Shopping Cart</SheetTitle>
           <SheetClose />
@@ -102,7 +102,7 @@ export default function ShoppingCartSidebar() {
               <p>SubTotal:</p>
               <p>{totalPrice?.toFixed(2)} EUR</p>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mt-4 text-sm">
               Shipping and taxes will be calculated at the checkout page.
             </p>
 

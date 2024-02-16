@@ -1,5 +1,6 @@
 import Paginator from "@/components/Paginator"
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper"
+import ShopFilter from "@/components/shop/filters/ShopFilter"
 import AllProducts from "@/components/shop/products/AllProducts"
 import AllProductsSkeleton from "@/components/skeletons/AllProductsSkeleton"
 import axios from "axios"
@@ -10,6 +11,7 @@ interface ShopPageProps {
   limit: number
   page: number
   offset: number
+  color: string
 }
 
 type paramsProps = {
@@ -18,7 +20,7 @@ type paramsProps = {
   }
 }
 
-const getProducts = async ({ limit, page, offset }: ShopPageProps) => {
+const getProducts = async ({ limit, page, offset, color }: ShopPageProps) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_WEB_URL}/api/shop/products/get-all-products`,
     {
@@ -26,6 +28,7 @@ const getProducts = async ({ limit, page, offset }: ShopPageProps) => {
         limit,
         page,
         offset,
+        color,
       },
     }
   )
@@ -39,14 +42,15 @@ export default async function ShopPage({ searchParams }: paramsProps) {
   const page: number = parseInt(searchParams.page as string) || 1
   const limit: number = parseInt(searchParams.limit as string) || 6
   const offset: number = (page - 1) * limit
-  // const search: string | null = searchParams.search?.toString() || null
+  const color: string = searchParams.color?.toString() || ""
 
-  const { products, count } = await getProducts({ limit, page, offset })
+  const { products, count } = await getProducts({ limit, page, offset, color })
   const totalPages = Math.ceil(count / limit)
 
   return (
     <MaxWidthWrapper>
       <Suspense fallback={<AllProductsSkeleton repeatCount={6} />}>
+        <ShopFilter />
         <AllProducts products={products} />
       </Suspense>
       <Paginator totalPages={totalPages} />
