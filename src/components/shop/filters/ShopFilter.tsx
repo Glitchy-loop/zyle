@@ -29,9 +29,9 @@ const ShopFilter = () => {
     const flattenedColors = (
       data as unknown as { color: string | string[] }[]
     ).flatMap((item) => (Array.isArray(item.color) ? item.color : [item.color]))
-
     // Remove duplicates
     const uniqueColors = Array.from(new Set(flattenedColors))
+
     return setColors(uniqueColors)
   }
 
@@ -97,20 +97,23 @@ const ShopFilter = () => {
               <DrawerDescription className="text-sm text-gray-500 text-center md:text-start mb-4">
                 Colors
               </DrawerDescription>
-              <div className="flex flex-wrap justify-center md:justify-start">
+              <div className="flex flex-wrap justify-center md:justify-start gap-2">
                 {colors.map((color) => (
                   <Button
                     key={color}
                     className={cn(
+                      `hover:bg-${color}-400 hover:border-${color}-200 hover:text-${color}-200 transition-colors duration-300`,
                       "p-0 m-0 border-2 hover:border-400 transition-colors duration-300",
                       `bg-${color}-500 border-${color}-200`,
                       color === "white" && "bg-white",
                       color === "black" && "bg-black",
+                      color === "multi" &&
+                        "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
                       "me-2",
                       "w-6",
                       "h-6",
                       params.get("color") === color &&
-                        "border-secondary-foreground border-2 border-solid"
+                        "border-primary border-2 border-solid"
                     )}
                     onClick={() => {
                       window.location.href = createPageUrl("color", color)
@@ -124,7 +127,7 @@ const ShopFilter = () => {
               <DrawerDescription className="text-sm text-gray-500 text-center md:text-start mb-4">
                 Gender
               </DrawerDescription>
-              <div className="flex flex-wrap justify-center md:justify-start">
+              <div className="flex justify-center md:justify-start gap-2">
                 {genders.map((gender, index) => (
                   <Button
                     key={index}
@@ -146,7 +149,11 @@ const ShopFilter = () => {
           </div>
           <DrawerFooter className="mt-10">
             <DrawerClose asChild>
-              <Button variant="default" onClick={() => clearFilter()}>
+              <Button
+                variant="default"
+                onClick={() => clearFilter()}
+                disabled={!params.get("color") && !params.get("gender")}
+              >
                 Clear
               </Button>
             </DrawerClose>

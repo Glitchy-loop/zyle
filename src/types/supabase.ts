@@ -91,7 +91,7 @@ export type Database = {
       products: {
         Row: {
           collection: string | null
-          color: string | null
+          color: string
           created_at: string
           description: string | null
           gender: string | null
@@ -105,7 +105,7 @@ export type Database = {
         }
         Insert: {
           collection?: string | null
-          color?: string | null
+          color?: string
           created_at?: string
           description?: string | null
           gender?: string | null
@@ -119,7 +119,7 @@ export type Database = {
         }
         Update: {
           collection?: string | null
-          color?: string | null
+          color?: string
           created_at?: string
           description?: string | null
           gender?: string | null

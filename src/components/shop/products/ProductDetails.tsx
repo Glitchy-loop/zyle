@@ -23,12 +23,35 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
         {/* Product details */}
         <div className="w-full md:w-[50%] py-10 md:py-0 px-6 md:px-8 lg:px-10  flex flex-col justify-between order-2">
           <div>
-            {/* Category */}
-            <p className="text-muted-foreground pb-4 text-xs">Sneakers</p>
+            {/* Gender */}
+            <p className="text-muted-foreground pb-4 text-xs">
+              {product.gender}
+            </p>
             {/* Name */}
-            <h1 className="text-2xl font-bold uppercase">{product.name}</h1>
+            <h1 className="text-3xl font-bold uppercase">{product.name}</h1>
+            {/* Collection */}
+            {product.collection && (
+              <p className="py-4 italic">{product.collection}</p>
+            )}
+            {/* Color */}
+            <p className="py-1 text-sm">
+              <span className="text-muted-foreground">Color: </span>
+              {product.color}
+            </p>
+            {/* Sizes */}
+            <p className="py-1 text-sm">
+              <span className="text-muted-foreground">Sizes: </span>
+              {product.sizes && product.sizes.join(", ")}
+            </p>
+
+            {/* Stock */}
+            <p className="py-1 text-sm">
+              <span className="text-muted-foreground">Stock: </span>
+              {product.stock}
+            </p>
+
             {/* Price */}
-            <p className="py-4 text-sm">
+            <p className="py-4  text-3xl font-bold">
               <span>{product.price}</span>
               <span>{currency.symbol}</span>
             </p>

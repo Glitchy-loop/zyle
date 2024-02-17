@@ -25,8 +25,9 @@ export async function GET(request: NextRequest) {
   // Conditionally add the color filter
   let queryWithFilters = baseQuery
 
+  // Conditionally add the gender filter
   if (color && color !== "") {
-    queryWithFilters = queryWithFilters.contains("color", [color])
+    queryWithFilters = queryWithFilters.eq("color", color)
   }
 
   // Conditionally add the gender filter

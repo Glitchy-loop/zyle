@@ -87,14 +87,32 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const product = row.original
 
+      const colors: { [key: string]: string } = {
+        white: "bg-white",
+        black: "bg-black",
+        multi: "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
+        red: "bg-red-500",
+        blue: "bg-blue-500",
+        green: "bg-green-500",
+        yellow: "bg-yellow-500",
+        purple: "bg-purple-500",
+        pink: "bg-pink-500",
+        orange: "bg-orange-500",
+        grey: "bg-gray-500",
+      }
+
+      const bgColorClass = colors[product?.color] || "bg-gray-400"
+
       return (
         <div className="flex items-center">
-          <div
-            className={cn(
-              "h-4 w-4 rounded-full",
-              Array.isArray(product.color) && `bg-${product.color}-400`
-            )}
-          ></div>
+          {product?.color && (
+            <div
+              className={cn(
+                "w-4 h-4 rounded-full border border-gray-200",
+                bgColorClass
+              )}
+            ></div>
+          )}
         </div>
       )
     },
