@@ -1,7 +1,6 @@
 import StudioSignleProductDetails from "@/components/studio/products/StudioSignleProductDetails"
 import { supabase } from "@/lib/supabase/supabase-client"
 import { Product } from "@/types/collection"
-import React from "react"
 
 interface paramsProps {
   searchParams: {
@@ -19,7 +18,9 @@ const StudioSingleProductPage = async ({ searchParams }: paramsProps) => {
     .single()
 
   return (
-    <div>{<StudioSignleProductDetails product={product as Product} />}</div>
+    <div>
+      <StudioSignleProductDetails product={product as Product} />
+    </div>
   )
 }
 

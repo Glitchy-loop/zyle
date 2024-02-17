@@ -11,7 +11,9 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <Link href={`shop/product/product?id=${product.id}`}>
+    <Link
+      href={`${process.env.NEXT_PUBLIC_WEB_URL}/shop/product/product?id=${product.id}`}
+    >
       <Card className="cursor-pointer flex flex-col group hover:border-primary transition-all duration-150 ease-in">
         <CardHeader className="p-0">
           {product.images && product.images[0] && (

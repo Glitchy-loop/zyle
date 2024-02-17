@@ -16,15 +16,20 @@ const StudioListAllProducts = async ({
     <div className="mt-10">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl">Studio Products Page</h1>
-        <Link href="/studio/products/new">
+        <Link href={`${process.env.NEXT_PUBLIC_WEB_URL}/studio/products/new`}>
           <Button>
             <Plus className="me-2 w-4 h-4" />
             <span>New Product</span>
           </Button>
         </Link>
       </div>
+
       <p className="text-muted-foreground mt-2 mb-10">
         Manage products. Add, remove, edit.
+      </p>
+
+      <p>
+        You have total of <span>{count} products</span>
       </p>
 
       <ProductsTable columns={columns} data={products} />

@@ -338,8 +338,6 @@ const CreateProductForm = () => {
                   control={form.control}
                   name="sizes"
                   render={({ field }) => {
-                    const isChecked = field.value?.includes(item.id)
-
                     return (
                       <FormItem
                         key={item.id}
@@ -353,8 +351,8 @@ const CreateProductForm = () => {
                                 ? field.onChange([...field.value, item.size])
                                 : field.onChange(
                                     field.value?.filter(
-                                      // @ts-ignore
-                                      (value) => value !== item.size
+                                      (value: string) =>
+                                        value !== String(item.size)
                                     )
                                   )
                             }}
@@ -373,7 +371,12 @@ const CreateProductForm = () => {
           )}
         />
 
-        <Button type="submit">Create product</Button>
+        <Button
+          type="submit"
+          disabled={(loading as boolean) || form.formState.isSubmitting}
+        >
+          Create product
+        </Button>
       </form>
     </Form>
   )

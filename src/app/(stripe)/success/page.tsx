@@ -11,7 +11,10 @@ const SuccessPage = () => {
         <p className="py-2">Your order successfully completed.</p>
         <CheckCircle size={40} className="text-green-500" />
 
-        <Link href="/" className="mt-10">
+        <Link
+          href={`${process.env.NEXT_PUBLIC_WEB_URL}/shop`}
+          className="mt-10"
+        >
           <Button variant="default">Continue Shopping</Button>
         </Link>
       </div>

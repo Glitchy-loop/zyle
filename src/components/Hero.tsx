@@ -11,7 +11,7 @@ const Hero = () => {
           The best place to find the perfect sneakers for you. We have a wide
           range of sneakers from different brands.
         </p>
-        <Link href="/shop">
+        <Link href={`${process.env.NEXT_PUBLIC_WEB_URL}/shop`}>
           <Button className="h-12 self-start w-40">Shop now</Button>
         </Link>
       </div>

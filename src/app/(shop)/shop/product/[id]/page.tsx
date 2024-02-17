@@ -1,4 +1,5 @@
 import ProductDetails from "@/components/shop/products/ProductDetails"
+import SimilarProducts from "@/components/shop/products/SimilarProducts"
 import ProductDetailPageSkeleton from "@/components/skeletons/ProductDetailPageSkeleton"
 import axios from "axios"
 import { Suspense } from "react"
@@ -26,6 +27,7 @@ const ProductDetailsPage = async ({ searchParams }: paramsProps) => {
   return (
     <Suspense fallback={<ProductDetailPageSkeleton />}>
       <ProductDetails product={data} />
+      <SimilarProducts product={data} />
     </Suspense>
   )
 }
