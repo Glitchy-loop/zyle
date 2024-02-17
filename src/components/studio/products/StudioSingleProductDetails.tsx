@@ -12,8 +12,9 @@ import {
 import Image from "next/image"
 import { currency } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
-const StudioSignleProductDetails = ({ product }: { product: Product }) => {
+const StudioSingleProductDetails = ({ product }: { product: Product }) => {
   return (
     <div className="grid grid-cols-4 gap-4">
       {/* Details */}
@@ -69,8 +70,11 @@ const StudioSignleProductDetails = ({ product }: { product: Product }) => {
           {/* Footer */}
           <CardFooter className="flex justify-between mt-10">
             {/* Actions */}
-            <Button variant="default">Edit</Button>
-            <Button variant="destructive">Delete</Button>
+            <Link
+              href={`${process.env.NEXT_PUBLIC_WEB_URL}/studio/products/edit/product?id=${product.id}`}
+            >
+              <Button variant="default">Edit</Button>
+            </Link>
           </CardFooter>
         </Card>
       </div>
@@ -100,4 +104,4 @@ const StudioSignleProductDetails = ({ product }: { product: Product }) => {
   )
 }
 
-export default StudioSignleProductDetails
+export default StudioSingleProductDetails

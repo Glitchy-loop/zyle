@@ -86,7 +86,7 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="container relative flex pt-10 flex-col items-center justify-center lg:px-0 mb-16">
+    <div className="container relative flex pt-10 flex-col items-center justify-center lg:px-0 mb-16 text-start">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] ">
         <h1 className="text-2xl font-semibold tracking-tight text-center">
           Login in to your account

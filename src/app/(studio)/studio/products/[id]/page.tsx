@@ -1,4 +1,4 @@
-import StudioSignleProductDetails from "@/components/studio/products/StudioSignleProductDetails"
+import StudioSingleProductDetails from "@/components/studio/products/StudioSingleProductDetails"
 import { supabase } from "@/lib/supabase/supabase-client"
 import { Product } from "@/types/collection"
 
@@ -19,7 +19,7 @@ const StudioSingleProductPage = async ({ searchParams }: paramsProps) => {
 
   return (
     <div>
-      <StudioSignleProductDetails product={product as Product} />
+      <StudioSingleProductDetails product={product as Product} />
     </div>
   )
 }

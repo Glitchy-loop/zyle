@@ -46,10 +46,10 @@ export default async function RootLayout({
   // If user is not admin, show unauthorized message
   if (!isAdmin) {
     return (
-      <div className="text-center mt-10 flex justify-center flex-col">
+      <div className="text-center my-10 flex justify-center flex-col">
         <h1 className="text-2xl">Unauthorized</h1>
         <p className="mt-2 text-muted-foreground">
-          You are not authorized to access this page.
+          You are not authorized to access this page. Only admins can access studio.
         </p>
       </div>
     )

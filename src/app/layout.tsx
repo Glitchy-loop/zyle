@@ -61,8 +61,8 @@ export default async function RootLayout({
                 <ShoppingCartSidebar />
 
                 {children}
+                <Footer />
               </main>
-              <Footer />
             </SmoothScrollProvider>
           </CartProvider>
           <Toaster position="top-center" richColors />

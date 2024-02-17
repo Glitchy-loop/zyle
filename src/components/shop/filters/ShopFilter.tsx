@@ -94,10 +94,10 @@ const ShopFilter = () => {
           <div className="grid grid-cols-2 space-4 px-4 mt-5">
             {/* Color */}
             <div>
-              <DrawerDescription className="text-sm text-gray-500 text-center md:text-start mb-4">
+              <DrawerDescription className="text-sm text-gray-500 text-start mb-4">
                 Colors
               </DrawerDescription>
-              <div className="flex flex-wrap justify-center md:justify-start gap-2">
+              <div className="flex flex-wrap gap-2">
                 {colors.map((color) => (
                   <Button
                     key={color}
@@ -124,10 +124,10 @@ const ShopFilter = () => {
             </div>
             {/* Gender */}
             <div>
-              <DrawerDescription className="text-sm text-gray-500 text-center md:text-start mb-4">
+              <DrawerDescription className="text-sm text-gray-500 text-start mb-4">
                 Gender
               </DrawerDescription>
-              <div className="flex justify-center md:justify-start gap-2">
+              <div className="flex flex-wrap gap-2">
                 {genders.map((gender, index) => (
                   <Button
                     key={index}
