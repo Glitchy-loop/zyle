@@ -52,10 +52,46 @@ export type Database = {
         }
         Relationships: []
       }
+      collections: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      colors: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           collection: string | null
-          color: string[] | null
+          color: string | null
           created_at: string
           description: string | null
           gender: string | null
@@ -64,12 +100,12 @@ export type Database = {
           name: string
           price: number
           price_id: string | null
-          sizes: string[] | null
+          sizes: number[] | null
           stock: number | null
         }
         Insert: {
           collection?: string | null
-          color?: string[] | null
+          color?: string | null
           created_at?: string
           description?: string | null
           gender?: string | null
@@ -78,12 +114,12 @@ export type Database = {
           name: string
           price: number
           price_id?: string | null
-          sizes?: string[] | null
+          sizes?: number[] | null
           stock?: number | null
         }
         Update: {
           collection?: string | null
-          color?: string[] | null
+          color?: string | null
           created_at?: string
           description?: string | null
           gender?: string | null
@@ -92,8 +128,26 @@ export type Database = {
           name?: string
           price?: number
           price_id?: string | null
-          sizes?: string[] | null
+          sizes?: number[] | null
           stock?: number | null
+        }
+        Relationships: []
+      }
+      sizes: {
+        Row: {
+          created_at: string
+          id: string
+          size: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          size: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          size?: number
         }
         Relationships: []
       }

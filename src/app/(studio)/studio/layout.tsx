@@ -1,6 +1,7 @@
+import BreadCrumb from "@/components/BreadCrumbs"
 import LoginForm from "@/components/auth/forms/LoginForm"
 import MaxWidthWrapper from "@/components/layout/MaxWidthWrapper"
-import StudioNavigation from "@/components/studio/layout/StudioNavigation"
+import StudioNavigation from "@/components/layout/StudioNavigation"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { DoorClosed } from "lucide-react"
 import { Metadata } from "next"

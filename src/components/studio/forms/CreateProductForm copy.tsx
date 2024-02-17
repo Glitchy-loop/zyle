@@ -17,19 +17,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import axios from "axios"
 import { toast } from "sonner"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { genders } from "@/lib/constants"
-import { supabase } from "@/lib/supabase/supabase-client"
-import { Collection, Color, Size } from "@/types/collection"
-import { Checkbox } from "@/components/ui/checkbox"
 
 const formSchema = z.object({
   name: z
@@ -42,75 +31,45 @@ const formSchema = z.object({
   price: z.string().transform((v) => Number(v) || 0),
   images: z.any(),
   gender: z.string().min(2).max(50),
-  collection: z.string().optional(),
+  collection: z.string().min(2).max(50),
   stock: z.string().transform((v) => Number(v) || 0),
-  color: z.string().min(2).max(50),
-  sizes: z.any(),
+  color: z.array(z.string().min(2).max(50)),
+  sizes: z.array(z.number().min(2).max(50)),
 })
 
 const CreateProductForm = () => {
   const [loading, setLoading] = useState<Boolean>(false)
-  const [collections, setCollections] = useState<Collection[]>([])
-  const [colors, setColors] = useState<Color[]>([])
-  const [sizes, setSizes] = useState<Size[]>([])
   const router = useRouter()
-
-  const getCollections = async () => {
-    const { data: collections, error } = await supabase
-      .from("collections")
-      .select("*")
-
-    return setCollections(collections || [])
-  }
-
-  const getColors = async () => {
-    const { data: colors, error } = await supabase.from("colors").select("*")
-    return setColors(colors || [])
-  }
-
-  const getSizes = async () => {
-    const { data: sizes, error } = await supabase.from("sizes").select("*")
-    return setSizes(sizes || [])
-  }
-
-  // Get collections from database
-  useEffect(() => {
-    getCollections()
-    getColors()
-    getSizes()
-  }, [])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      images: [], // Initialize with an empty array for multiple images
-      gender: "",
-      collection: "",
-      stock: 0,
-      color: "",
-      sizes: [],
+      name: "Testas",
+      description: "This is a test product description",
+      price: 69,
+      images: null,
+      gender: "Men",
+      collection: "Winter 2024",
+      stock: 3,
+      color: ["red", "blue", "green"],
+      sizes: [40, 41, 42, 43],
     },
   })
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const formData = new FormData()
-
     formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("price", data.price.toString())
+    formData.append("images", data.images)
     formData.append("gender", data.gender)
-    formData.append("collection", data.collection || "")
-    formData.append("sizes", JSON.stringify(data.sizes))
-    formData.append("color", data.color)
+    formData.append("collection", data.collection)
     formData.append("stock", data.stock.toString())
+    formData.append("color", data.color.toString())
+    formData.append("sizes", data.sizes.toString())
 
-    data.images.forEach((image: Blob) => {
-      formData.append("images", image)
-    })
-
+    // Axios request to register user
+    setLoading(true)
     const createProductPromise = new Promise((resolve, reject) => {
       axios
         .post(`/api/studio/products/create-new-product`, formData, {
@@ -128,10 +87,11 @@ const CreateProductForm = () => {
           reject(error.response.data.message || "Couldn't add the product.")
         })
     })
+
     toast.promise(createProductPromise, {
       loading: "Adding new product...",
       success: () => {
-        router.push("/studio/products")
+        router.push("/shop")
         router.refresh()
         setLoading(false)
         return "Product added successfully!"
@@ -193,30 +153,26 @@ const CreateProductForm = () => {
             </FormItem>
           )}
         />
-        {/* Images */}
+        {/* Image */}
         <FormField
           control={form.control}
           name="images"
           render={({ field }) => (
             <FormItem className="my-6">
-              <FormLabel>Images</FormLabel>
+              <FormLabel>Image</FormLabel>
               <FormControl>
                 <Input
-                  name="images"
+                  name="image"
                   accept=".jpg, .jpeg, .png"
                   type="file"
                   required
-                  multiple // Enable multiple file selection
                   onChange={(e) =>
-                    field.onChange(
-                      e.target.files ? Array.from(e.target.files) : []
-                    )
+                    field.onChange(e.target.files ? e.target.files[0] : null)
                   }
                 />
               </FormControl>
               <FormDescription>
-                Images must be in png, jpeg, or jpg format and each file should
-                be less than 1MB.
+                Image must be a png, jpeg or jpg and less than 5MB.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -229,21 +185,10 @@ const CreateProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Gender</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a gender" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {genders.map((gender, index) => (
-                    <SelectItem key={index} value={gender.name}>
-                      {gender.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>Select a gender for the product</FormDescription>
+              <FormControl>
+                <Input placeholder="Gender" {...field} />
+              </FormControl>
+              <FormDescription>Add gender</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -255,23 +200,10 @@ const CreateProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Collection</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a collection" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {collections.map((collection, index) => (
-                    <SelectItem key={index} value={collection.name}>
-                      {collection.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Select a collection for the product
-              </FormDescription>
+              <FormControl>
+                <Input placeholder="Collection" {...field} />
+              </FormControl>
+              <FormDescription>Enter product collection</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -298,24 +230,10 @@ const CreateProductForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Color</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value ? field.value[0] : undefined}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a color" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {colors.map((color, index) => (
-                    <SelectItem key={index} value={color.name}>
-                      {color.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>Select a color for the product</FormDescription>
+              <FormControl>
+                <Input placeholder="Color" {...field} />
+              </FormControl>
+              <FormDescription>Enter product color</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -324,56 +242,24 @@ const CreateProductForm = () => {
         <FormField
           control={form.control}
           name="sizes"
-          render={() => (
+          render={({ field }) => (
             <FormItem>
-              <div className="mb-4">
-                <FormLabel className="text-base">Sizes</FormLabel>
-                <FormDescription>
-                  Select the sizes you want to associate with the product.
-                </FormDescription>
-              </div>
-              {sizes.map((item) => (
-                <FormField
-                  key={item.id}
-                  control={form.control}
-                  name="sizes"
-                  render={({ field }) => {
-                    const isChecked = field.value?.includes(item.id)
-
-                    return (
-                      <FormItem
-                        key={item.id}
-                        className="flex flex-row items-start space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(item.size)}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange([...field.value, item.size])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      // @ts-ignore
-                                      (value) => value !== item.size
-                                    )
-                                  )
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-sm font-normal">
-                          {item.size}
-                        </FormLabel>
-                      </FormItem>
-                    )
-                  }}
+              <FormLabel>Sizes</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Sizes"
+                  {...field}
+                  value={field.value.toString()}
                 />
-              ))}
+              </FormControl>
+              <FormDescription>Enter product sizes</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        <Button type="submit">Create product</Button>
+        <Button type="submit" disabled={loading as boolean}>
+          Create product
+        </Button>
       </form>
     </Form>
   )

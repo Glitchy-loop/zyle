@@ -35,54 +35,63 @@ export async function POST(request: NextRequest) {
   const description = data.get("description")
   const price = data.get("price")
   const gender = data.get("gender")
-  const imageFile = data.get("images")
-  const fileName = (imageFile as File)?.name
+  const imageFiles = data.getAll("images")
   const collection = data.get("collection")
   const stock = data.get("stock")
   const color = data.get("color")
   const sizes = data.get("sizes")
+    ? JSON.parse(data.get("sizes") as string)
+    : null
 
   try {
     //  Upload image file to the storage
-    if ((imageFile as File).size > 1000000) {
-      return NextResponse.json(
-        { error: "Image is too large." },
-        { status: 400 }
-      )
-    }
+    const fileArray = Array.from(imageFiles) as File[]
+    const imageUrls: string[] = []
 
-    const { data: image, error: imageUploadError } =
-      await serviceSupabase.storage
-        .from("products")
-        .upload(`products/${name}/${fileName}`, imageFile as File)
+    await Promise.all(
+      fileArray.map(async (imageFile: File) => {
+        // Upload the image file to the storage
+        const { data: image, error: imageUploadError } =
+          await serviceSupabase.storage
+            .from("products")
+            .upload(`images/${name}/${imageFile.name}`, imageFile, {
+              cacheControl: "3600",
+            })
 
-    // Get image URL
-    const imageUrl = supabase.storage
-      .from("products")
-      .getPublicUrl(`products/${name}/${fileName}`)
+        // Check if image upload was successful
+        if (!imageUploadError) {
+          // Get public URL of the uploaded image
+          const imageUrl = serviceSupabase.storage
+            .from("products")
+            .getPublicUrl(`images/${name}/${imageFile.name}`)
 
-    if (imageUrl) {
-      NextResponse.json({ message: "Image uploaded" }, { status: 200 })
-    }
+          // Add the URL to the array
+          if (imageUrl) {
+            imageUrls.push(imageUrl.data.publicUrl)
+          }
+        }
+      })
+    )
 
-    //   Add new product to stripe
-    const productStripe = await stripe.products.create({
+    // Add new product to stripe
+    const stripeProduct = await stripe.products.create({
       name: name as string,
-      images: [imageUrl.data.publicUrl],
+      images: imageUrls,
       description: description as string,
       default_price_data: {
-        currency: "EUR",
+        currency: "eur",
         unit_amount: parseInt(price as string) * 100,
       },
       metadata: {
         stock: stock as string,
         color: color as string,
-        sizes: sizes as string,
+        sizes: JSON.stringify(sizes),
+        collection: collection as string,
+        gender: gender as string,
       },
     })
 
     // Add product to supabase database
-
     const { data: product, error: productError } = await serviceSupabase
       .from("products")
       .insert([
@@ -91,15 +100,14 @@ export async function POST(request: NextRequest) {
           description,
           price,
           gender,
-          images: [imageUrl.data.publicUrl],
+          images: imageUrls,
           collection,
           stock,
-          color: [color],
-          sizes: [sizes],
-          price_id: productStripe.default_price,
+          color,
+          sizes,
+          price_id: stripeProduct.default_price,
         },
       ])
-
     if (productError) {
       return NextResponse.json(productError, { status: 500 })
     }

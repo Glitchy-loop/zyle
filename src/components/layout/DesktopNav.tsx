@@ -11,6 +11,7 @@ interface DesktopNavProps {
 
 const DesktopNav = ({ navItems }: DesktopNavProps) => {
   const pathname = usePathname()
+
   return (
     <nav className="hidden md:block">
       <ul className="flex uppercase text-xs">

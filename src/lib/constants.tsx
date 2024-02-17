@@ -102,3 +102,15 @@ export const studioNavItems = [
     href: "/studio/settings",
   },
 ]
+
+export const genders = [
+  {
+    name: "Men",
+  },
+  {
+    name: "Women",
+  },
+  {
+    name: "Unisex",
+  },
+]

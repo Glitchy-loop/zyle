@@ -10,16 +10,17 @@ type BreadCrumbType = {
 
 type BreadCrumbPropsType = {
   items: BreadCrumbType[]
+  root: string
 }
 
-export default function BreadCrumb({ items }: BreadCrumbPropsType) {
+export default function BreadCrumb({ items, root }: BreadCrumbPropsType) {
   return (
     <div className="my-4 flex items-center space-x-1 text-sm text-muted-foreground">
       <Link
-        href={"/"}
+        href={`/${root.toLowerCase()}`}
         className="overflow-hidden text-ellipsis whitespace-nowrap"
       >
-        Home
+        {root}
       </Link>
       {items?.map((item: BreadCrumbType, index: number) => (
         <React.Fragment key={index}>

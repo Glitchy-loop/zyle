@@ -15,10 +15,8 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
       {/* Breadcrumbs */}
       <div className="ms-0 md:ms-4 xl:ms-0">
         <BreadCrumb
-          items={[
-            { title: "Shop", link: "/shop" },
-            { title: product.name, link: `/product/${product.id}` },
-          ]}
+          root={"Shop"}
+          items={[{ title: product.name, link: `/product/${product.id}` }]}
         />
       </div>
       <div className="flex flex-col md:flex-row h-full">
