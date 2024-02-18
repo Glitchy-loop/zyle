@@ -15,6 +15,7 @@ import useAuth from "@/hooks/useAuth"
 import { Session } from "@supabase/supabase-js"
 import { LayoutDashboard, LogOut } from "lucide-react"
 import Link from "next/link"
+import { ThemeToggle } from "../ThemeToggle"
 
 const UserNav = ({ session }: { session: Session | null }) => {
   const { signOut } = useAuth()
@@ -47,6 +48,9 @@ const UserNav = ({ session }: { session: Session | null }) => {
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        <div className="px-2 my-2">
+          <ThemeToggle />
+        </div>
         <DropdownMenuItem className="cursor-pointer" onClick={signOut}>
           Log out
           <DropdownMenuShortcut>

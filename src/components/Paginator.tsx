@@ -14,6 +14,7 @@ const Paginator = ({ totalPages }: { totalPages: number }) => {
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams)
     params.set("page", pageNumber.toString())
+    window.scrollTo(0, 0)
     return `${pathname}?${params.toString()}`
   }
 
@@ -21,7 +22,11 @@ const Paginator = ({ totalPages }: { totalPages: number }) => {
     <Pagination className="mt-4 mb-16">
       <PaginationContent>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <Link key={page} href={createPageURL(page)}>
+          <Link
+            key={page}
+            href={createPageURL(page)}
+            onClick={() => window.scrollTo(0, 0)}
+          >
             <PaginationItem
               className={cn(
                 "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9",

@@ -49,7 +49,8 @@ export default async function RootLayout({
       <div className="text-center my-10 flex justify-center flex-col">
         <h1 className="text-2xl">Unauthorized</h1>
         <p className="mt-2 text-muted-foreground">
-          You are not authorized to access this page. Only admins can access studio.
+          You are not authorized to access this page. Only admins can access
+          studio.
         </p>
       </div>
     )

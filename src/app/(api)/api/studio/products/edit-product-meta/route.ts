@@ -35,11 +35,7 @@ export async function POST(request: NextRequest) {
 
   const id = data.get("id")
   const stripe_product_id = data.get("stripe_product_id")
-  const name = data.get("name")
-  const description = data.get("description")
-  const price = data.get("price")
   const gender = data.get("gender")
-  const collection = data.get("collection")
   const stock = data.get("stock")
   const color = data.get("color")
   const sizes = data.get("sizes")
@@ -48,14 +44,10 @@ export async function POST(request: NextRequest) {
 
   try {
     // Update product in supabase database
-    const { data: product, error: productError } = await serviceSupabase
+    const { error: productError } = await serviceSupabase
       .from("products")
       .update({
-        name,
-        description,
-        price,
         gender,
-        collection,
         stock,
         color,
         sizes,
@@ -64,41 +56,32 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    // Edit product on stripe
-    await stripe.products.update(stripe_product_id as string, {
-      name: name as string,
-      description: description as string,
-      metadata: {
-        stock: stock as string,
-        color: color as string,
-        sizes: JSON.stringify(sizes),
-        collection: collection as string,
-        gender: gender as string,
-      },
-    })
-
-    // Update the price's metadata with a new lookup_key
-    // const updatedPrice = await stripe.products.update(
-    //   stripe_product_id as string,
-
-    //   {
-    //     default_price: price as string,
-    //   }
-    // )
-
-    revalidatePath(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products`)
-
-    revalidatePath(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products/product?id=${id}`
-    )
-
-    revalidatePath(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products/edit/product?id=${id}`
-    )
-
     if (productError) {
       return NextResponse.json(productError, { status: 500 })
     }
+
+    // Edit product on stripe
+    await stripe.products
+      .update(stripe_product_id as string, {
+        metadata: {
+          stock: stock as string,
+          color: color as string,
+          sizes: JSON.stringify(sizes),
+          gender: gender as string,
+        },
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
+    // Revalidate paths
+    revalidatePath(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products`)
+    revalidatePath(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products/product?id=${id}`
+    )
+    revalidatePath(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products/edit/product?id=${id}`
+    )
   } catch (error) {
     NextResponse.json(error, { status: 500 })
   }

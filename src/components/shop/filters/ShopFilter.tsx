@@ -135,7 +135,7 @@ const ShopFilter = () => {
                     className={cn(
                       "me-2",
                       params.get("gender") === gender &&
-                        "border-secondary-foreground border-2 border-solid bg-secondary transition-colors duration-300 hover:bg-secondary disabled:opacity-1"
+                        "border-secondary-foreground border-2 border-solid bg-secondary-foreground/50 transition-colors duration-300 hover:bg-secondary disabled:opacity-1"
                     )}
                     onClick={() => {
                       window.location.href = createPageUrl("gender", gender)

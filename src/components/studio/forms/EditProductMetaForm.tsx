@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
-import { Collection, Color, Product, Size } from "@/types/collection"
-import { set, z } from "zod"
+import React, { useState } from "react"
+import { Color, Product, Size } from "@/types/collection"
+import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {
@@ -26,32 +26,26 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { genders } from "@/lib/constants"
-import { supabase } from "@/lib/supabase/supabase-client"
 import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
 interface EditProductFormProps {
   product: Product
-  collections: Collection[]
   colors: Color[]
   sizes: Size[]
 }
 
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name is too short" }).max(50),
-  description: z.string().min(10).max(500),
-  price: z.any(),
   gender: z.string().min(2).max(50),
-  collection: z.string().optional(),
   stock: z.any(),
   color: z.string().min(2).max(50),
   sizes: z.any(),
 })
 
-const EditProductForm = ({
+const EditProductMetaForm = ({
   product,
-  collections,
+
   colors,
   sizes,
 }: EditProductFormProps) => {
@@ -61,11 +55,7 @@ const EditProductForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: product.name || "",
-      description: product.description || "",
-      price: product.price || 0,
       gender: product.gender || "",
-      collection: product.collection! || "",
       stock: product.stock || 0,
       color: product.color || "",
       sizes: product.sizes || [],
@@ -75,11 +65,7 @@ const EditProductForm = ({
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const formData = new FormData()
 
-    formData.append("name", data.name)
-    formData.append("description", data.description)
-    formData.append("price", data.price.toString())
     formData.append("gender", data.gender)
-    formData.append("collection", data.collection || "")
     formData.append("sizes", JSON.stringify(data.sizes))
     formData.append("color", data.color)
     formData.append("stock", data.stock.toString())
@@ -88,7 +74,7 @@ const EditProductForm = ({
 
     const editProductPromise = new Promise((resolve, reject) => {
       axios
-        .post(`/api/studio/products/edit-product`, formData, {
+        .post(`/api/studio/products/edit-product-meta`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((response) => {
@@ -122,52 +108,7 @@ const EditProductForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 my-16">
-        {/* Name */}
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Product Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Product name" {...field} />
-              </FormControl>
-              <FormDescription>Enter product name</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Description */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Product Description</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Product description" {...field} />
-              </FormControl>
-              <FormDescription>Enter product description</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Price */}
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="Price" {...field} />
-              </FormControl>
-              <FormDescription>Enter product price</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 my-8">
         {/* Gender */}
         <FormField
           control={form.control}
@@ -198,38 +139,7 @@ const EditProductForm = ({
             </FormItem>
           )}
         />
-        {/* Collection */}
-        <FormField
-          control={form.control}
-          name="collection"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Collection</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a collection" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {collections.map((collection, index) => (
-                    <SelectItem
-                      key={index}
-                      value={collection.name}
-                      defaultValue={product?.collection || ""}
-                    >
-                      {collection.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Select a collection for the product
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         {/* Stock */}
         <FormField
           control={form.control}
@@ -326,4 +236,4 @@ const EditProductForm = ({
   )
 }
 
-export default EditProductForm
+export default EditProductMetaForm

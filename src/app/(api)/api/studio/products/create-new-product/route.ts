@@ -1,5 +1,6 @@
 import { getServiceSupabase } from "@/lib/supabase/supabase-client"
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
+import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import initStripe from "stripe"
@@ -109,6 +110,8 @@ export async function POST(request: NextRequest) {
           price_id: stripeProduct.default_price,
         },
       ])
+
+    revalidatePath(`${process.env.NEXT_PUBLIC_WEB_URL}/studio/products`)
 
     if (productError) {
       return NextResponse.json(productError, { status: 500 })

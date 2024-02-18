@@ -28,6 +28,7 @@ const SimilarProducts = async ({ product }: ProductProps) => {
   return (
     <MaxWidthWrapper className="mt-20 py-10">
       <h3 className="text-2xl mb-4">Similar products</h3>
+      {similarProducts.length === 0 && <div>No similar products found.</div>}
       <Suspense
         fallback={
           <div className="flex">

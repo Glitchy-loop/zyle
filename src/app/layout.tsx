@@ -10,7 +10,6 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import SmoothScrollProvider from "@/providers/SmoothScrollProvider"
 import CartProvider from "@/providers/CartProvider"
 import ShoppingCartSidebar from "@/components/layout/ShoppingCartSidebar"
-import Footer from "@/components/layout/Footer"
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -50,7 +49,7 @@ export default async function RootLayout({
       <body className={cn("font-sans antialiased", fontSans.variable)}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
@@ -61,7 +60,6 @@ export default async function RootLayout({
                 <ShoppingCartSidebar />
 
                 {children}
-                <Footer />
               </main>
             </SmoothScrollProvider>
           </CartProvider>
