@@ -97,6 +97,7 @@ export async function POST(request: NextRequest) {
       .insert([
         {
           name,
+          stripe_product_id: stripeProduct.id,
           description,
           price,
           gender,
@@ -108,6 +109,7 @@ export async function POST(request: NextRequest) {
           price_id: stripeProduct.default_price,
         },
       ])
+
     if (productError) {
       return NextResponse.json(productError, { status: 500 })
     }

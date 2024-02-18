@@ -102,6 +102,7 @@ export type Database = {
           price_id: string | null
           sizes: number[] | null
           stock: number | null
+          stripe_product_id: string | null
         }
         Insert: {
           collection?: string | null
@@ -116,6 +117,7 @@ export type Database = {
           price_id?: string | null
           sizes?: number[] | null
           stock?: number | null
+          stripe_product_id?: string | null
         }
         Update: {
           collection?: string | null
@@ -130,6 +132,7 @@ export type Database = {
           price_id?: string | null
           sizes?: number[] | null
           stock?: number | null
+          stripe_product_id?: string | null
         }
         Relationships: []
       }

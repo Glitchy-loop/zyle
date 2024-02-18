@@ -1,5 +1,3 @@
-"use client"
-
 import { Product } from "@/types/collection"
 import {
   Card,

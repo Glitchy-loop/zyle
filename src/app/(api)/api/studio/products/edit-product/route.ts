@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
   const data = await request.formData()
 
   const id = data.get("id")
+  const stripe_product_id = data.get("stripe_product_id")
   const name = data.get("name")
   const description = data.get("description")
   const price = data.get("price")
@@ -46,16 +47,6 @@ export async function POST(request: NextRequest) {
     : null
 
   try {
-    // Add new product to stripe
-    // const stripeProduct = await stripe.products.update(
-    //   'prod_NWjs8kKbJWmuuc',
-    //   {
-    //     metadata: {
-    //       order_id: '6735',
-    //     },
-    //   }
-    // );
-
     // Update product in supabase database
     const { data: product, error: productError } = await serviceSupabase
       .from("products")
@@ -71,9 +62,38 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", id)
       .select()
+      .single()
+
+    // Edit product on stripe
+    await stripe.products.update(stripe_product_id as string, {
+      name: name as string,
+      description: description as string,
+      metadata: {
+        stock: stock as string,
+        color: color as string,
+        sizes: JSON.stringify(sizes),
+        collection: collection as string,
+        gender: gender as string,
+      },
+    })
+
+    // Update the price's metadata with a new lookup_key
+    // const updatedPrice = await stripe.products.update(
+    //   stripe_product_id as string,
+
+    //   {
+    //     default_price: price as string,
+    //   }
+    // )
+
+    revalidatePath(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products`)
 
     revalidatePath(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/api/studio/products/product?id=${id}`
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products/product?id=${id}`
+    )
+
+    revalidatePath(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/studio/products/edit/product?id=${id}`
     )
 
     if (productError) {

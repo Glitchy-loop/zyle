@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { Collection, Color, Product, Size } from "@/types/collection"
-import { z } from "zod"
+import { set, z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import {
@@ -33,12 +33,15 @@ import { useRouter } from "next/navigation"
 
 interface EditProductFormProps {
   product: Product
+  collections: Collection[]
+  colors: Color[]
+  sizes: Size[]
 }
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name is too short" }).max(50),
   description: z.string().min(10).max(500),
-  price: z.number().transform((v) => Number(v) || 0),
+  price: z.any(),
   gender: z.string().min(2).max(50),
   collection: z.string().optional(),
   stock: z.any(),
@@ -46,33 +49,14 @@ const formSchema = z.object({
   sizes: z.any(),
 })
 
-const EditProductForm = ({ product }: EditProductFormProps) => {
+const EditProductForm = ({
+  product,
+  collections,
+  colors,
+  sizes,
+}: EditProductFormProps) => {
   const [loading, setLoading] = useState<Boolean>(false)
-  const [collections, setCollections] = useState<Collection[]>([])
-  const [colors, setColors] = useState<Color[]>([])
-  const [sizes, setSizes] = useState<Size[]>([])
   const router = useRouter()
-
-  // Get collections from database
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [collectionsData, colorsData, sizesData] = await Promise.all([
-          supabase.from("collections").select("*"),
-          supabase.from("colors").select("*"),
-          supabase.from("sizes").select("*"),
-        ])
-
-        setCollections(collectionsData?.data || [])
-        setColors(colorsData?.data || [])
-        setSizes(sizesData?.data || [])
-      } catch (error) {
-        console.error("Error fetching data:", error)
-      }
-    }
-
-    fetchData()
-  }, [])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,7 +65,7 @@ const EditProductForm = ({ product }: EditProductFormProps) => {
       description: product.description || "",
       price: product.price || 0,
       gender: product.gender || "",
-      collection: product.collection || "",
+      collection: product.collection! || "",
       stock: product.stock || 0,
       color: product.color || "",
       sizes: product.sizes || [],
@@ -100,6 +84,7 @@ const EditProductForm = ({ product }: EditProductFormProps) => {
     formData.append("color", data.color)
     formData.append("stock", data.stock.toString())
     formData.append("id", product.id)
+    formData.append("stripe_product_id", product.stripe_product_id || "")
 
     const editProductPromise = new Promise((resolve, reject) => {
       axios
@@ -136,226 +121,208 @@ const EditProductForm = ({ product }: EditProductFormProps) => {
   }
 
   return (
-    <>
-      {product && (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 my-16"
-          >
-            {/* Name */}
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Product name" {...field} />
-                  </FormControl>
-                  <FormDescription>Enter product name</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Description</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Product description" {...field} />
-                  </FormControl>
-                  <FormDescription>Enter product description</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Price */}
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="Price" {...field} />
-                  </FormControl>
-                  <FormDescription>Enter product price</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Gender */}
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a gender" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {genders.map((gender, index) => (
-                        <SelectItem
-                          key={index}
-                          value={gender.name}
-                          defaultValue={product?.gender || ""}
-                        >
-                          {gender.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    Select a gender for the product
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Collection */}
-            <FormField
-              control={form.control}
-              name="collection"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Collection</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a collection" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {collections.map((collection, index) => (
-                        <SelectItem
-                          key={index}
-                          value={collection.name}
-                          defaultValue={product?.collection || ""}
-                        >
-                          {collection.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    Select a collection for the product
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Stock */}
-            <FormField
-              control={form.control}
-              name="stock"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Stock</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="Stock" {...field} />
-                  </FormControl>
-                  <FormDescription>Enter product stock</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Color */}
-            <FormField
-              control={form.control}
-              name="color"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={product.color}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a color" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {colors.map((color, index) => (
-                        <SelectItem key={index} value={color && color.name}>
-                          {color.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    Select a color for the product
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Sizes */}
-            <FormField
-              control={form.control}
-              name="sizes"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="mb-4">
-                    <FormLabel className="text-base">Sizes</FormLabel>
-                    <FormDescription>
-                      Select the sizes you want to associate with the product.
-                    </FormDescription>
-                  </div>
-                  {sizes.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex flex-row items-start space-x-3 space-y-0"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 my-16">
+        {/* Name */}
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Product name" {...field} />
+              </FormControl>
+              <FormDescription>Enter product name</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Description */}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Product description" {...field} />
+              </FormControl>
+              <FormDescription>Enter product description</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Price */}
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Price" {...field} />
+              </FormControl>
+              <FormDescription>Enter product price</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Gender */}
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Gender</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a gender" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {genders.map((gender, index) => (
+                    <SelectItem
+                      key={index}
+                      value={gender.name}
+                      defaultValue={product?.gender || ""}
                     >
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value?.includes(item.size)}
-                          onCheckedChange={(checked) => {
-                            return checked
-                              ? field.onChange([...field.value, item.size])
-                              : field.onChange(
-                                  field.value?.filter(
-                                    (value: string) =>
-                                      value === String(item.size) // TODO fix this
-                                  )
-                                )
-                          }}
-                        />
-                      </FormControl>
-                      <FormLabel className="text-sm font-normal">
-                        {item.size}
-                      </FormLabel>
-                    </div>
+                      {gender.name}
+                    </SelectItem>
                   ))}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </SelectContent>
+              </Select>
+              <FormDescription>Select a gender for the product</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Collection */}
+        <FormField
+          control={form.control}
+          name="collection"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Collection</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a collection" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {collections.map((collection, index) => (
+                    <SelectItem
+                      key={index}
+                      value={collection.name}
+                      defaultValue={product?.collection || ""}
+                    >
+                      {collection.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Select a collection for the product
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Stock */}
+        <FormField
+          control={form.control}
+          name="stock"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Stock</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Stock" {...field} />
+              </FormControl>
+              <FormDescription>Enter product stock</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Color */}
+        <FormField
+          control={form.control}
+          name="color"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Color</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={product.color}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a color" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {colors.map((color, index) => (
+                    <SelectItem key={index} value={color && color.name}>
+                      {color.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>Select a color for the product</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Sizes */}
+        <FormField
+          control={form.control}
+          name="sizes"
+          render={({ field }) => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel className="text-base">Sizes</FormLabel>
+                <FormDescription>
+                  Select the sizes you want to associate with the product.
+                </FormDescription>
+              </div>
+              {sizes.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex flex-row items-start space-x-3 space-y-0"
+                >
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value?.includes(item.size)}
+                      onCheckedChange={(checked) => {
+                        return checked
+                          ? field.onChange([...field.value, item.size])
+                          : field.onChange(
+                              field.value?.filter(
+                                (value: string) => value === String(item.size) // TODO fix this
+                              )
+                            )
+                      }}
+                    />
+                  </FormControl>
+                  <FormLabel className="text-sm font-normal">
+                    {item.size}
+                  </FormLabel>
+                </div>
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <Button
-              type="submit"
-              disabled={(loading as boolean) || form.formState.isSubmitting}
-            >
-              Update product
-            </Button>
-          </form>
-        </Form>
-      )}
-    </>
+        <Button
+          type="submit"
+          disabled={(loading as boolean) || form.formState.isSubmitting}
+        >
+          Update product
+        </Button>
+      </form>
+    </Form>
   )
 }
 
