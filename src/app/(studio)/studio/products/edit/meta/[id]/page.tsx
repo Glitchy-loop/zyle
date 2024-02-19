@@ -44,7 +44,10 @@ const StudioEditProductMetaPage = async ({ searchParams }: paramsProps) => {
         ]}
       />
       <div className="flex justify-between mt-8">
-        <h1 className="text-3xl font-bold mb-4">Edit Product</h1>
+        <h1 className="text-3xl font-bold mb-4">
+          <span className="text-muted-foreground me-2">Edit</span>
+          {product?.name}
+        </h1>
         <Link
           href={`${process.env.NEXT_PUBLIC_WEB_URL}/studio/products/product?id=${product?.id}`}
         >

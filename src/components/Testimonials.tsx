@@ -15,7 +15,7 @@ import { Quote, Star } from "lucide-react"
 
 const Testimonials = () => {
   return (
-    <div className="flex flex-col justify-center pt-20">
+    <div className="flex flex-col justify-center pt-10">
       <h2 className="text-2xl text-center">What our client say</h2>
       <Swiper
         //   slidesPerView={3}

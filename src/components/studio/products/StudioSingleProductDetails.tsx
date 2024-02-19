@@ -4,16 +4,17 @@ import ProductMainDetailsModule from "../modules/ProductMainDetailsModule"
 import ProductPriceModule from "../modules/ProductPriceModule"
 import ProductMediaModule from "../modules/ProductMediaModule"
 import ProductRawPreviewModule from "../modules/ProductRawPreviewModule"
+import ProductMetaDataModule from "../modules/ProductMetaDataModule"
 
 const StudioSingleProductDetails = ({ product }: { product: Product }) => {
   return (
     <div className="grid grid-cols-4 gap-4">
-      <div className="col-span-3">
+      <div className="col-span-4 lg:col-span-3">
         {/* Main product details */}
         <ProductMainDetailsModule product={product} />
 
         {/* Product meta data */}
-        <ProductMainDetailsModule product={product} />
+        <ProductMetaDataModule product={product} />
 
         {/* Product price */}
         <ProductPriceModule product={product} />
@@ -22,7 +23,7 @@ const StudioSingleProductDetails = ({ product }: { product: Product }) => {
       </div>
 
       {/* Media */}
-      <div className="col-span-1">
+      <div className="col-span-4 lg:col-span-1">
         <ProductMediaModule product={product} />
       </div>
 

@@ -31,7 +31,7 @@ const ProductMainDetailsModule = ({ product }: { product: Product }) => {
           {/* Collection */}
           <div className="flex mt-2">
             <p className="text-muted-foreground">Collection: </p>
-            <span className="ms-2 text-primary-foreground">
+            <span className="ms-2 text-secondary-foreground">
               {!product.collection
                 ? "No collection"
                 : product.collection || "..."}

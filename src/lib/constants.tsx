@@ -103,14 +103,4 @@ export const studioNavItems = [
   },
 ]
 
-export const genders = [
-  {
-    name: "Men",
-  },
-  {
-    name: "Women",
-  },
-  {
-    name: "Unisex",
-  },
-]
+export const genders = ["Men", "Women", "Unisex"]

@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
+import { genders } from "@/lib/constants"
 import { supabase } from "@/lib/supabase/supabase-client"
 import { cn } from "@/lib/utils"
 import { usePathname, useSearchParams } from "next/navigation"
@@ -18,7 +19,6 @@ import { useEffect, useState } from "react"
 
 const ShopFilter = () => {
   const [colors, setColors] = useState([] as string[])
-  const [genders, setGenders] = useState([] as string[])
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -35,30 +35,8 @@ const ShopFilter = () => {
     return setColors(uniqueColors)
   }
 
-  const getGenders = async () => {
-    try {
-      const { data, error } = await supabase.from("products").select("gender")
-
-      if (error) {
-        console.error("Error fetching genders:", error.message)
-        return
-      }
-      // Extract the "gender" property from each object
-      //   @ts-ignore
-      const genders = data.map((item) => item.gender)
-
-      // Remove duplicates
-      const uniqueGenders = Array.from(new Set(genders))
-
-      setGenders(uniqueGenders as string[])
-    } catch (error) {
-      console.error("Error in getGenders:", error)
-    }
-  }
-
   useEffect(() => {
     getColors()
-    getGenders()
   }, [])
 
   const createPageUrl = (filterKey: string, filterValue: string) => {
@@ -101,10 +79,13 @@ const ShopFilter = () => {
                 {colors.map((color) => (
                   <Button
                     key={color}
+                    disabled={params.get("color") === color}
                     className={cn(
+                      "disabled:opacity-1",
                       `hover:bg-${color}-400 hover:border-${color}-200 hover:text-${color}-200 transition-colors duration-300`,
                       "p-0 m-0 border-2 hover:border-400 transition-colors duration-300",
                       `bg-${color}-500 border-${color}-200`,
+                      color === "grey" && "bg-gray-500",
                       color === "white" && "bg-white",
                       color === "black" && "bg-black",
                       color === "multi" &&
@@ -127,7 +108,7 @@ const ShopFilter = () => {
               <DrawerDescription className="text-sm text-gray-500 text-start mb-4">
                 Gender
               </DrawerDescription>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-2">
                 {genders.map((gender, index) => (
                   <Button
                     key={index}
@@ -135,7 +116,7 @@ const ShopFilter = () => {
                     className={cn(
                       "me-2",
                       params.get("gender") === gender &&
-                        "border-secondary-foreground border-2 border-solid bg-secondary-foreground/50 transition-colors duration-300 hover:bg-secondary disabled:opacity-1"
+                        "border-primary border-2 border-solid bg-secondary-foreground/50 transition-colors duration-300 hover:bg-secondary disabled:opacity-1"
                     )}
                     onClick={() => {
                       window.location.href = createPageUrl("gender", gender)

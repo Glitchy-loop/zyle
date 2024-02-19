@@ -16,9 +16,11 @@ export default function Home() {
       <div className="bg-secondary">
         <MaxWidthWrapper>
           <Testimonials />
-          <Footer />
         </MaxWidthWrapper>
       </div>
+      <MaxWidthWrapper>
+        <Footer />
+      </MaxWidthWrapper>
     </>
   )
 }
