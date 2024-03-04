@@ -78,9 +78,6 @@ Add to cart sidebar
 Product filter
 ![Image Alt text](demo/zyle-filter.jpg)
 
-Single product details page
-![Image Alt text](demo/zyle-product-page.jpg)
-
 Shop page
 ![Image Alt text](demo/zyle-shop-page.jpg)
 
