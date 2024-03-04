@@ -4,7 +4,7 @@
 ![Image Alt text](demo/zyle-1.jpg)
 ![Image Alt text](demo/zyle-2.jpg)
 
-Zyle is not just an online store; it's a dynamic, fast, and immersive e-commerce platform crafted with the latest technologies to redefine your online shopping journey. Our tech stack is as cutting-edge as your favorite fashion trends, ensuring a seamless and enjoyable shopping experience.
+Zyle is dynamic, fast, and immersive e-commerce platform crafted with the latest technologies to redefine your online shopping journey
 
 ## 🚀 Tech Stack:
 
