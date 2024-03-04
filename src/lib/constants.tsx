@@ -27,7 +27,7 @@ export const loginRegisterNavItems = [
 ]
 
 export const currency = {
-  type: "euro",
+  type: "eur",
   symbol: "€",
 }
 
